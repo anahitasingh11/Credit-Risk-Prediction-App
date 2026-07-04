@@ -6,6 +6,9 @@ The Credit Risk Prediction App is a Machine Learning web application built using
 
 The application uses an Extra Trees Classifier trained on the German Credit Risk dataset and provides instant predictions through a simple and user-friendly interface.
 
+##LIVE DEMO: 
+Streamlit App: https://credit-risk-prediction-app-o2c9xd6xjcjxtz3fmxqcfu.streamlit.app/
+
 ---
 
 ## Features
