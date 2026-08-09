@@ -56,16 +56,40 @@ if st.button("Predict Risk"):
     good_probability = probabilities[1]
     bad_probability = probabilities[0]
 
+    # Risk score based on probability of bad credit
+    risk_score = bad_probability * 100
+
     st.write("### Credit Risk Assessment")
 
-    if pred == 1:
-        st.success("The predicted credit risk is: **GOOD**")
+    # Display risk score
+    st.metric(
+        "Credit Risk Score",
+        f"{risk_score:.2f}/100"
+    )
+
+    # Classify risk level
+    if risk_score < 30:
+        risk_level = "LOW RISK"
+        st.success(f"🟢 {risk_level}")
+
+    elif risk_score < 60:
+        risk_level = "MEDIUM RISK"
+        st.warning(f"🟡 {risk_level}")
+
+    else:
+        risk_level = "HIGH RISK"
+        st.error(f"🔴 {risk_level}")
+
+    # Display prediction probabilities
+    col1, col2 = st.columns(2)
+
+    with col1:
         st.metric(
             "Probability of Good Credit",
             f"{good_probability * 100:.2f}%"
         )
-    else:
-        st.error("The predicted credit risk is: **BAD**")
+
+    with col2:
         st.metric(
             "Probability of Bad Credit",
             f"{bad_probability * 100:.2f}%"
