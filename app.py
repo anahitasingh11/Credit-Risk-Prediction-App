@@ -49,9 +49,24 @@ input_df = pd.DataFrame({
     "Purpose": [encoders["Purpose"].transform([purpose])[0]]
 })
 
-if st. button ("Predict Risk"):
-    pred = model. predict (input_df) [0]
+if st.button("Predict Risk"):
+    pred = model.predict(input_df)[0]
+    probabilities = model.predict_proba(input_df)[0]
+
+    good_probability = probabilities[1]
+    bad_probability = probabilities[0]
+
+    st.write("### Credit Risk Assessment")
+
     if pred == 1:
-        st.success("The predicted credit risk is: **G00D**")
+        st.success("The predicted credit risk is: **GOOD**")
+        st.metric(
+            "Probability of Good Credit",
+            f"{good_probability * 100:.2f}%"
+        )
     else:
         st.error("The predicted credit risk is: **BAD**")
+        st.metric(
+            "Probability of Bad Credit",
+            f"{bad_probability * 100:.2f}%"
+        )
