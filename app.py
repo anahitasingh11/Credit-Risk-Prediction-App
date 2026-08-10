@@ -2,6 +2,12 @@ import streamlit as st
 import pandas as pd 
 import joblib
 import os
+import shap
+import openai
+client = openai.OpenAI(
+    api_key=os.environ["GROQ_API_KEY"],
+    base_url="https://api.groq.com/openai/v1"
+)
 print("App location:", os.path.abspath(__file__))
 print("Current folder:", os.getcwd())
 print("Files here:", os.listdir())
@@ -10,6 +16,7 @@ sex_encoder = joblib.load("Sex_encoder.pkl")
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 model = joblib.load(os.path.join(BASE_DIR, "extra_trees_credit_model.pkl"))
+explainer = shap.TreeExplainer(model)
 
 housing_encoder = joblib.load(os.path.join(BASE_DIR, "Housing_encoder.pkl"))
 saving_encoder = joblib.load(os.path.join(BASE_DIR, "Saving accounts_encoder.pkl"))
@@ -94,3 +101,90 @@ if st.button("Predict Risk"):
             "Probability of Bad Credit",
             f"{bad_probability * 100:.2f}%"
         )
+                    # Calculate SHAP values
+    shap_values = explainer.shap_values(input_df)
+
+    # For binary classification, select the BAD credit class
+    if len(shap_values.shape) == 3:
+        shap_values = shap_values[:, :, 0]
+
+    feature_names = [
+        "Age",
+        "Sex",
+        "Job",
+        "Housing",
+        "Saving accounts",
+        "Checking account",
+        "Credit amount",
+        "Duration",
+        "Purpose"
+    ]
+
+    shap_df = pd.DataFrame({
+        "Feature": feature_names,
+        "SHAP Value": shap_values[0]
+    })
+
+    shap_df["Absolute Impact"] = shap_df["SHAP Value"].abs()
+
+    shap_df = shap_df.sort_values(
+        "Absolute Impact",
+        ascending=False
+    )
+
+    st.write("### 🧠 Why this prediction?")
+
+    for _, row in shap_df.iterrows():
+
+        feature = row["Feature"]
+        impact = row["SHAP Value"]
+
+        if impact > 0:
+            st.write(
+                f"🔴 **{feature}** — increased predicted credit risk"
+            )
+        else:
+            st.write(
+                f"🟢 **{feature}** — reduced predicted credit risk"
+            )
+            top_factors = shap_df.head(5)
+
+factor_text = ""
+
+for _, row in top_factors.iterrows():
+    factor_text += (
+        f"{row['Feature']}: "
+        f"{row['SHAP Value']:.4f}\n"
+    )
+    response = client.responses.create(
+    model="openai/gpt-oss-20b",
+    input=f"""
+You are a credit risk explanation assistant.
+
+Explain the machine-learning prediction below in simple,
+professional language.
+
+Do NOT make a new credit decision.
+Do NOT invent information.
+Only explain the provided model output and factors.
+
+Risk score: {risk_score:.2f}/100
+Risk level: {risk_level}
+Probability of bad credit: {bad_probability * 100:.2f}%
+
+The most important SHAP factors are:
+
+{factor_text}
+
+Write:
+1. A short overall assessment.
+2. The main factors increasing risk.
+3. The main factors reducing risk.
+
+Keep the explanation under 150 words.
+"""
+)
+    ai_explanation = response.output_text
+
+st.write("### 🤖 AI Risk Assessment")
+st.write(ai_explanation)
