@@ -1,109 +1,43 @@
-# Credit Risk Prediction App
+# AI-Powered Credit Risk Prediction & Analysis
 
-## Overview
+An AI-powered credit risk assessment application that combines **Machine Learning, Explainable AI (SHAP), and Generative AI** to predict credit risk and provide understandable explanations for individual predictions.
 
-The Credit Risk Prediction App is a Machine Learning web application built using Streamlit. It predicts whether a loan applicant has a **Good** or **Bad** credit risk based on personal and financial information.
+The application uses an **Extra Trees Classifier** to predict credit risk, **SHAP** to identify the factors influencing each prediction, and the **Groq API** to generate a natural-language AI assessment based on the model's results.
 
-The application uses an Extra Trees Classifier trained on the German Credit Risk dataset and provides instant predictions through a simple and user-friendly interface.
+## 🚀 Live Demo
 
-##LIVE DEMO: 
-Streamlit App: https://credit-risk-prediction-app-o2c9xd6xjcjxtz3fmxqcfu.streamlit.app/
+🔗 **Streamlit App:https://credit-risk-prediction-app-o2c9xd6xjcjxtz3fmxqcfu.streamlit.app/
 
----
+## 📌 Project Overview
 
-## Features
+Credit risk assessment is an important task in financial institutions, where the goal is to determine whether an applicant represents a higher or lower credit risk.
 
-- Predicts credit risk as **Good** or **Bad**
-- Interactive Streamlit web application
-- Uses trained Machine Learning model
-- Encodes categorical features automatically
-- Easy-to-use interface for entering applicant details
+Traditional machine learning models can make accurate predictions but are often difficult to interpret.
 
----
+This project addresses that problem by combining:
 
-## Technologies Used
+- **Machine Learning** → Predicts credit risk
+- **SHAP Explainability** → Shows which features influenced the prediction
+- **Generative AI** → Converts model insights into a human-readable explanation
+- **Streamlit** → Provides an interactive web application
 
-- Python
-- Streamlit
-- Pandas
-- Scikit-learn
-- Joblib
-- NumPy
+### Workflow
 
----
-
-## Machine Learning Model
-
-**Algorithm Used:**
-- Extra Trees Classifier
-
-**Input Features:**
-- Age
-- Sex
-- Job
-- Housing
-- Saving Accounts
-- Checking Account
-- Credit Amount
-- Duration
-- Purpose
-
-**Output:**
-- Good Credit Risk
-- Bad Credit Risk
-
----
-
-## Project Structure
-
-```
-credit-risk-prediction-app/
-│
-├── app.py
-├── analysis_model.ipynb
-├── extra_trees_credit_model.pkl
-├── Sex_encoder.pkl
-├── Housing_encoder.pkl
-├── Saving accounts_encoder.pkl
-├── Checking account_encoder.pkl
-├── Purpose_encoder.pkl
-└── README.md
-
-
-
-## How to Use
-
-1. Open the application.
-2. Enter the applicant's details.
-3. Click **Predict Risk**.
-4. The application displays whether the predicted credit risk is **Good** or **Bad**.
-
----
-
-## Dataset
-
-This project is based on the **German Credit Risk Dataset**, which contains customer demographic and financial information used to predict creditworthiness.
-
----
-
-## Future Improvements
-
-- Display prediction confidence score
-- Improve UI design and responsiveness
-- Add data visualization dashboard
-- Deploy using Streamlit Community Cloud
-- Compare multiple machine learning models
-
----
-
-## Author
-
-**Anahita Singh**
-
-Bachelor of Technology (KIIT DU)
-
----
-
-## License
-
-This project is developed for educational and learning purposes.
+```text
+Applicant Information
+        ↓
+Data Preprocessing
+        ↓
+Extra Trees Classifier
+        ↓
+Credit Risk Prediction
+        ↓
+Risk Probability / Score
+        ↓
+SHAP Explainability
+        ↓
+Important Risk Factors
+        ↓
+Groq Generative AI
+        ↓
+Natural-Language Risk Assessment
